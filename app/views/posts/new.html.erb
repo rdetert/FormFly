@@ -9,7 +9,7 @@ $(document).ready(function(){
 				var thumb = $("#thumbnail_"+$(this).attr("picname"));
 
 				new AjaxUpload(this, {
-					action: '<%= upload_photo_posts_path %>',	// <=== CHANGE THIS LINE TO SEE .js and .html RENDER PATH
+					action: '<%= upload_photo_posts_path %>.js',	// <=== CHANGE THIS LINE TO SEE .js and .html RENDER PATH
 					name: $(this).attr("picname"),
 					onSubmit: function(file, extension) {
 						// $('div.preview').addClass('loading');

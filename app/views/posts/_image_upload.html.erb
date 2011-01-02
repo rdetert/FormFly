@@ -1,7 +1,7 @@
 <div>
 	<% @images = @image_uploads.images.where(:slot => picname).all %>
 	<% if @images.empty? %>
-		<%= image_tag "#", :id => "thumbnail_#{picname}", :width => 100, :style => "display:none" %>
+		<%= tag("img", { :src => "/images/onepixel.png", :id => "thumbnail_#{picname}", :width => 100, :style => "display:none" }, false) %>
 	<% else %>
 		<%= image_tag @images.first.data.thumb("100x").url, :id => "thumbnail_#{picname}", :width => 100 %>
 	<% end %>
