@@ -1,3 +1,13 @@
 FormFly is a demo that makes use of the DragonFly gem by Mark Evans https://github.com/markevans/dragonfly
 
 The problem it solves is allowing uploaded images to be previewed in the browser before the record is actually saved.
+
+There seems to be a problem with DragonFly's URL rendering based on response type. HTML works fine and gives a url like '/media/...' but JS returns something like '/posts/pre/media/...'
+
+You can see the difference for yourself by going to /views/posts/new.html/erb around line #12 I have hilited the appropriate code.
+
+Change this:
+	action: '<%= upload_photo_posts_path %>'
+
+to this:
+	action: '<%= upload_photo_posts_path %>.js'
