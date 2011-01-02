@@ -1,0 +1,13 @@
+<% @post.images.each do |image| %>
+	<div>
+		<%= link_to (image_tag image.data.thumb("100x").url), image.data.url %>
+	</div>
+<% end %>
+
+<h1><%= @post.title %></h1>
+
+<div>
+	<%= @post.body %>
+</div>
+
+<div><%= link_to "Back to Posts", posts_path %></div>

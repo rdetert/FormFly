@@ -1,0 +1,5 @@
+<% if @errorMessage.nil? %>
+<%= @upload.data.thumb("100x").url %>
+<% else %>
+alert("<%= @errorMessage %>")
+<% end %>

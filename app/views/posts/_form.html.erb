@@ -1,0 +1,26 @@
+<%= form_for @image_uploads, :url => upload_photo_posts_path do |f| %>
+	<fieldset>
+		<legend>Images</legend>
+		<div style="width:400px; border:1px solid gray;">
+			<% (1..3).each do |i| %>
+				<%= render "image_upload", :picname => "pic#{i}" %>
+			<% end %>
+		</div>
+	</fieldset>
+<% end %>
+
+<%= form_for @post do |f| %>
+	<%= render "share/error_messages", :target => @post %>
+	<div>
+		<%= f.label :title %>
+		<%= f.text_field :title %>
+	</div>
+	<div>
+		<%= f.label :body %>
+		<%= f.text_field :body %>
+	</div>
+	<div class="posts">
+    	<%= f.submit "Post It!" %>
+  	</div>
+<% end %>
+

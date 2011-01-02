@@ -1,0 +1,13 @@
+<h1>FormFly Posts</h1>
+
+<ol>
+<% @posts.each do |post| %>
+	<li>
+		<%= image_tag post.images.first.data.thumb("100x").url %> <%= link_to post.title,  post_path(post) %>
+	</li>
+<% end %>
+</ol>
+
+<div>
+	<%= link_to "New Post", new_post_path %>
+</div>
