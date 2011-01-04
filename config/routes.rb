@@ -6,6 +6,9 @@ Formfly::Application.routes.draw do
   resources   :posts do
     post 'ajax_photo_upload', :on => :collection, :as => :upload_photo
   end
+  
+  match '/posts/create' => 'posts#uploadify_photo_upolad'
+  
   root  :to => 'posts#index'
   
   # The priority is based upon order of creation:

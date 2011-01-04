@@ -7,6 +7,12 @@
 			<% end %>
 		</div>
 	</fieldset>
+	
+	<fieldset id="uploadify_images_upload">
+		<legend>Uploadify Images Upload</legend>
+		<%#= f.file_field :data %>
+		<%= file_field_tag "post[photos][pic4]" %>
+	</fieldset>
 <% end %>
 
 <%= form_for @post do |f| %>
@@ -23,4 +29,3 @@
     	<%= f.submit "Post It!" %>
   	</div>
 <% end %>
-

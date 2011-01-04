@@ -1,6 +1,10 @@
+<%= javascript_include_tag 'swfobject', 'jquery.uploadify.v2.1.4' %>
+
 <%= render 'form' %>
 
 <script type="text/javascript">
+<%- session_key = Rails.application.config.session_options[:key] -%>
+
 $(document).ready(function(){
 
 	$(".ajax_loadable")
@@ -32,5 +36,36 @@ $(document).ready(function(){
 				return false;
 			}
 		);
+		
+		
+	//////////////////////Uploadify/////////////////////////////////////////////
+		
+	// Create an empty object to store our custom script data
+  var uploadify_script_data = {};
+
+	// Fetch the CSRF meta tag data
+	var csrf_token = $('meta[name=csrf-token]').attr('content');
+	var csrf_param = $('meta[name=csrf-param]').attr('content');
+
+	// Now associate the data in the config, encoding the data safely
+	uploadify_script_data[csrf_param] = encodeURI(encodeURIComponent(csrf_token));
+
+	// Associate the session information
+	uploadify_script_data["#{session_key}"] = "#{cookies[session_key]}";
+
+  // Configure Uploadify
+  $('#post_photos_pic4').uploadify({
+    'uploader' : '/javascripts/uploadify/uploadify.swf',
+    'script' : '/posts/create',
+    'scriptData' : uploadify_script_data,
+		'cancelImg' : '/images/cancel.png',
+		'multi' : true,
+		'folder' : '/images',
+		'auto' : true,
+		onComplete: function(fileObj, response, data) {
+			alert("Ready to Complete");
+		}
+  });
 });
+
 </script>

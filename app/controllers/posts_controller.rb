@@ -25,6 +25,10 @@ class PostsController < ApplicationController
     end
   end
   
+  def uploadify_photo_upolad
+    debugger
+  end
+  
   def ajax_photo_upload
     if @image_uploads.nil?
       render :text => ""
@@ -65,7 +69,7 @@ class PostsController < ApplicationController
   
   def create
     @post = Post.new(params[:post])
-    @post.assetable = @image_uploads.assetable    
+    @post.assetable = @image_uploads.assetable
     Post.transaction do
       if @post.save
         @image_uploads.assetable = nil
