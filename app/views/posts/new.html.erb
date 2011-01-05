@@ -1,36 +1,112 @@
+<%= content_for :sub_js do %>
+<%= javascript_include_tag 'swfobject', 'jquery.uploadify.v2.1.4' %>
+<% end %>
+
+
+<div style="position:absolute; background-color:#f9f9f9; border:gray 1px solid; width:498px; left:100px; padding:0px 10px 0px 10px;">
+	<h1>FormFly</h1>
+	<h2>A <%= link_to "Dragonfly", "http://github.com/markevans/dragonfly" %> and <%= link_to "Uploadify", "http://uploadify.com" %> demo for Rails 3</h2>
+	<h3><%= link_to "http://github.com/rdetert/FormFly", "http://github.com/rdetert/FormFly" %></h3>
+</div>
+
 <%= render 'form' %>
 
 <script type="text/javascript">
+<% session_key = Rails.application.config.session_options[:key] %>
+
 $(document).ready(function(){
+	
+	// Create an empty object to store our custom script data
+	var uploadify_script_data = {};
 
-	$(".ajax_loadable")
-		.each(
-			function(){
-				var thumb = $("#thumbnail_"+$(this).attr("picname"));
+	// Fetch the CSRF meta tag data
+	var csrf_token = $('meta[name=csrf-token]').attr('content');
+	var csrf_param = $('meta[name=csrf-param]').attr('content');
 
-				new AjaxUpload(this, {
-					action: '<%= upload_photo_posts_path %>',	// <=== CHANGE THIS LINE TO SEE .js and .html RENDER PATH
-					name: $(this).attr("picname"),
-					onSubmit: function(file, extension) {
-						// $('div.preview').addClass('loading');
-					},
-					onComplete: function(file, response) {
-						thumb.load(function(){
-						// 		$('div.preview').removeClass('loading');
-						 		thumb.unbind();
-						 	});
-						 	thumb.attr('src', response).show();
-					}
-				});
+	// Now associate the data in the config, encoding the data safely
+	uploadify_script_data[csrf_param] = encodeURI(encodeURIComponent(csrf_token));
+
+	// Associate the session information
+	// GOTCHA : authenticity_token for Rails 3
+	uploadify_script_data["<%= session_key %>"] = "<%= cookies[session_key] %>";
+
+	$(".remove_link")
+		.live("click",
+				function()
+				{
+					link = this;
+					pic = $(this).attr("picname");
+					$.post(
+						$(this).attr("href"), 
+						function(response)
+						{
+							if (response.status == 1){
+								$("#"+pic).attr("src", "<%= image_path "onepixel.png" %>");
+								$(link).remove();
+							}
+							alert(response.message);
+						},
+						"json"
+					);
+					return false;
+				}
+			);
+
+	// Configure Uploadify
+	$('.uploadify')
+		.uploadify(
+			{
+				'uploader' : '/javascripts/uploadify/uploadify.swf',
+
+				'script' : '<%= upload_photo_posts_url %>.json',
+
+				'scriptData' : uploadify_script_data,
+
+				'cancelImg' : '/images/cancel.png',
+
+				'multi' : true,
+
+				'auto' : true,
+
+				'fileExt': '*.jpg;*.jpeg;*.gif;*.png',
+
+				'removeCompleted' : true,
+
+				'onComplete' : function(event, ID, fileObj, response, data) 
+							{
+								var goodies = jQuery.parseJSON(response);
+								if (goodies.status == 1){
+									var _id = $(event.currentTarget).attr("picname");
+									$("#"+_id).attr("src", goodies.img);
+									
+									var link = $("<a></a>");
+									$(link)
+										.attr("href", "<%= escape_javascript destroy_photo_posts_url %>/"+_id)
+										.addClass("remove_link")
+										.attr("picname", _id)
+										.text("remove");
+									
+									$("#"+_id+"_remover").append(link);
+									
+								}else{
+									alert(goodies.message);
+								}
+							},
+			
+				'onSelectOnce' : function(event, data) {
+					// GOTCHA : For some reason custom fields are tougher than they ought to be. See manual for onSelectOnce
+					//use the folder variable to correspond to our server slots
+					$(event.currentTarget).uploadifySettings("folder", "/"+$(event.currentTarget).attr("picname"));
+					// ------
+					// For some reason scriptData isn't working
+					// var filefield = event.currentTarget;
+					// var _scriptdata = $(filefield).uploadifySettings("scriptData");
+					// _scriptdata.picname = $(filefield).attr("picname");
+					// $(filefield).uploadifySettings("scriptData", _scriptdata, true);
+			    }
 			}
-		);
+	);
 
-	$(".ajax_photo_destroy")
-		.click(
-			function(){
-				$.get($(this).attr("href")+".js", null, null, "script");
-				return false;
-			}
-		);
 });
+
 </script>

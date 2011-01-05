@@ -6,6 +6,8 @@ body, p, ol, ul, td {
   line-height: 18px;
 }
 
+h2 { font-size: medium; }
+
 pre {
   background-color: #eee;
   padding: 10px;
@@ -15,9 +17,60 @@ pre {
 a { color: #000; }
 a:visited { color: #666; }
 a:hover { color: #fff; background-color:#000; }
+h2 a {
+	color: blue;
+}
+h3 a {
+	color: blue;
+}
+a.remove_link {
+	
+}
 
 div.field, div.actions {
   margin-bottom: 10px;
+}
+
+label {
+	font-size: medium;
+	font-weight: bold;
+	display: block;
+	margin-left: 20px;
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+
+input {
+	font-size: medium;
+	font-weight: bold;
+	color: gray;
+	border: gray 1px solid;
+	padding: 3px;
+	margin-left: 20px;
+	width: 300px;
+}
+
+input[type=submit] {
+	color: #fff;
+	background-color: #444;
+	margin-left: 398px;
+	width: 80px;
+	padding: 7px;
+	margin-top: 7px;
+}
+input[type=submit]:hover {
+	background-color: #aaa;
+	cursor: pointer;
+}
+
+textarea {
+	font-size: medium;
+	font-weight: bold;
+	color: gray;
+	padding: 3px;
+	width: 450px;
+	margin-left: 20px;
+	height: 100px;
 }
 
 #notice {

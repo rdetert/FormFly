@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20101231062326) do
   create_table "posts", :force => true do |t|
     t.integer  "assetable_id"
     t.string   "title"
-    t.string   "body"
+    t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

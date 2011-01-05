@@ -1,2 +1,2 @@
-class Asset < ActiveRecord::Base
+class Asset < ActiveRecord::Base  
 end

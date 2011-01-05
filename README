@@ -1,20 +1,24 @@
-FormFly is a demo that makes use of the DragonFly gem by Mark Evans https://github.com/markevans/dragonfly
+FormFly is a demo for Rails 3 that uses DragonFly and Uploadify
 
-The problem it solves is allowing uploaded images to be previewed in the browser before the record is actually saved.
-
-There seems to be a problem with DragonFly's URL rendering based on response type. HTML works fine and gives a url like:
-
-	cache: [GET /media/BAhbB1sHOgZmIisyMDExLzAxLzAyLzAwXzUwXzQ2XzQ2NF9jYWJpbmV0c18xLkpQR1sIOgZwOgp0aHVtYiIJMTAweA] miss, store
-
-but JS returns something like:
-
-	cache: [GET /posts/%3Cpre%20style=%22word-wrap:%20break-word;%20white-space:%20pre-wrap;%22%3E/media/BAhbB1sHOgZmImIyMDExLzAxLzAyLzAwXzUxXzEyXzY4OV9yYWxwaF9sYXVyZW5fcHVycGxlX2xhYmVsX21lbnNfcnR3X2Nsb3RoZXNfMjAxMF9zcHJpbmdfc3VtbWVyX18xNy5qcGdbCDoGcDoKdGh1bWIiCTEwMHg%3C/pre%3E] miss
+This version uses a technique where intermediary images are saved to a separate ImageUpload model while the server waits for the Post to be submitted.
 
 
-You can see the difference for yourself by going to /views/posts/new.html/erb around line #12 I have hilited the appropriate code.
+To Install:
 
-Change this:
-	action: '<%= upload_photo_posts_path %>'
+$ bundle install
+$ rake db:migrate
+$ rails s
 
-to this:
-	action: '<%= upload_photo_posts_path %>.js'
+Go to localhost:3000
+
+
+---
+Resources:
+	http://github.com/markevans/dragonfly
+	http://groups.google.com/group/dragonfly-users
+	http://www.glrzad.com/ruby-on-rails/using-uploadify-with-rails-3/
+	http://www.uploadify.com/documentation/methods/uploadifysettings/
+
+
+---
+Thanks to Daihua for helping me implement Uploadify.

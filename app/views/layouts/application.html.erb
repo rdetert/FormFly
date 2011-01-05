@@ -3,7 +3,8 @@
 <head>
   <title>Formfly</title>
   <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag 'jquery.tools.min', 'ajaxupload', 'application' %>
+  <%= javascript_include_tag 'jquery.tools.min', 'application' %>
+  <%= yield :sub_js %>
   <%= csrf_meta_tag %>
 </head>
 <body>

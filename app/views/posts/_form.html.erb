@@ -1,26 +1,37 @@
-<%= form_for @image_uploads, :url => upload_photo_posts_path do |f| %>
-	<fieldset>
-		<legend>Images</legend>
-		<div style="width:400px; border:1px solid gray;">
-			<% (1..3).each do |i| %>
-				<%= render "image_upload", :picname => "pic#{i}" %>
-			<% end %>
+<div style="width:800px; height:300px;">
+	<%= form_for @image_uploads, :url => upload_photo_posts_path do |f| %>
+		<% (1..3).each do |i| %>
+			<% slot = "pic#{i}" %>
+			<div style="position:absolute; left:<%=200*i-100%>px; top:150px; width:118px; height:118px; float:left; background-color:#f9f9f9; border:gray 1px solid;">
+				
+				<% @images = @image_uploads.images.where(:slot => slot).all %>
+				
+				<% imgurl = "onepixel.png" if @images.empty? %>
+				<% imgurl = my_thumb(@images.first, 118, 118).url unless @images.empty? %>
+				
+				<%= image_tag imgurl, :style => "width:118px; height:118px;", :id => slot %>
+
+			</div>
+			<div style="position:absolute; left:<%=200*i-100%>px; top:280px; float:left;">
+			<%= render :partial => "image_upload", :locals => { :picname => slot } %>
+			</div>
+		<% end %>
+	<% end %>
+</div>
+
+<div style="position:absolute; background-color:#f9f9f9; border:gray 1px solid; width:498px; left:100px; padding:5px 10px 20px 10px; top:350px">
+	<%= form_for @post do |f| %>
+		<%= render "share/error_messages", :target => @post %>
+		<div>
+			<%= f.label :title %>
+			<%= f.text_field :title %>
 		</div>
-	</fieldset>
-<% end %>
-
-<%= form_for @post do |f| %>
-	<%= render "share/error_messages", :target => @post %>
-	<div>
-		<%= f.label :title %>
-		<%= f.text_field :title %>
-	</div>
-	<div>
-		<%= f.label :body %>
-		<%= f.text_field :body %>
-	</div>
-	<div class="posts">
-    	<%= f.submit "Post It!" %>
-  	</div>
-<% end %>
-
+		<div>
+			<%= f.label :body %>
+			<%= f.text_area :body %>
+		</div>
+		<div class="posts">
+	    	<%= f.submit "Post It!" %>
+	  	</div>
+	<% end %>
+</div>

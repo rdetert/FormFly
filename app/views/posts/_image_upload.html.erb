@@ -1,10 +1,6 @@
 <div>
-	<% @images = @image_uploads.images.where(:slot => picname).all %>
-	<% if @images.empty? %>
-		<%= tag("img", { :src => "/images/onepixel.png", :id => "thumbnail_#{picname}", :width => 100, :style => "display:none" }, false) %>
-	<% else %>
-		<%= image_tag @images.first.data.thumb("100x").url, :id => "thumbnail_#{picname}", :width => 100 %>
-	<% end %>
-	<%= file_field_tag "post[photos][#{picname}]", :class => "ajax_loadable", :picname => picname %>
-	<%= link_to "remove", destroy_photo_posts_path(picname), :class => "ajax_photo_destroy", :picname => picname %>
+	<%= file_field_tag "post[photos][#{picname}]", :class => "uploadify", :picname => picname %>
+	<div id="<%= "#{picname}_remover" %>">
+		<%= link_to("remove", destroy_photo_posts_url(@images.first.slot), :class => "remove_link", :picname => "#{picname}") if @images.present? %>
+	</div>
 </div>
