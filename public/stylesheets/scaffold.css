@@ -75,7 +75,7 @@ textarea {
 }
 
 #notice {
-  color: green;
+	color: green;
 }
 
 .field_with_errors {
@@ -83,27 +83,31 @@ textarea {
 	color: red;
 }
 
+.field_with_errors label { 
+	color: red;
+}
+
 #error_explanation {
-  width: 479px;
-  border: 2px solid red;
-  padding: 7px;
-  padding-bottom: 0;
-  margin-bottom: 20px;
-  background-color: #f0f0f0;
+	 width: 479px;
+	 border: 2px solid red;
+	 padding: 7px;
+	 padding-bottom: 0;
+	 margin-bottom: 20px;
+	 background-color: #f0f0f0;
 }
 
 #error_explanation h2 {
-  text-align: left;
-  font-weight: bold;
-  padding: 5px 5px 5px 15px;
-  font-size: small;
-  margin: -7px;
-  margin-bottom: 0px;
-  background-color: #eee;
-  color: #000;
+	 text-align: left;
+	 font-weight: bold;
+	 padding: 5px 5px 5px 15px;
+	 font-size: small;
+	 margin: -7px;
+	 margin-bottom: 0px;
+	 background-color: #eee;
+	 color: #000;
 }
 
 #error_explanation ul li {
-  font-size: 12px;
-  list-style: square;
+	font-size: 12px;
+	list-style: square;
 }

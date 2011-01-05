@@ -19,7 +19,7 @@
 	<% end %>
 </div>
 
-<div style="position:absolute; background-color:#f9f9f9; border:gray 1px solid; width:498px; left:100px; padding:5px 10px 20px 10px; top:350px">
+<div style="position:absolute; background-color:#f9f9f9; border:gray 1px solid; width:498px; left:100px; padding:5px 10px 20px 10px; top:350px; z-index: -1;">
 	<%= form_for @post do |f| %>
 		<%= render "share/error_messages", :target => @post %>
 		<div>
