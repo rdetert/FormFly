@@ -38,12 +38,13 @@ label {
 	margin-left: 20px;
 	margin-top: 15px;
 	margin-bottom: 5px;
+	color: gray;
 }
 
 input {
 	font-size: medium;
 	font-weight: bold;
-	color: gray;
+	color: black;
 	border: gray 1px solid;
 	padding: 3px;
 	margin-left: 20px;
@@ -66,7 +67,7 @@ input[type=submit]:hover {
 textarea {
 	font-size: medium;
 	font-weight: bold;
-	color: gray;
+	color: black;
 	padding: 3px;
 	width: 450px;
 	margin-left: 20px;
@@ -78,13 +79,12 @@ textarea {
 }
 
 .field_with_errors {
-  padding: 2px;
-  background-color: red;
-  display: table;
+	padding: 2px;
+	color: red;
 }
 
 #error_explanation {
-  width: 450px;
+  width: 479px;
   border: 2px solid red;
   padding: 7px;
   padding-bottom: 0;
@@ -96,11 +96,11 @@ textarea {
   text-align: left;
   font-weight: bold;
   padding: 5px 5px 5px 15px;
-  font-size: 12px;
+  font-size: small;
   margin: -7px;
   margin-bottom: 0px;
-  background-color: #c00;
-  color: #fff;
+  background-color: #eee;
+  color: #000;
 }
 
 #error_explanation ul li {

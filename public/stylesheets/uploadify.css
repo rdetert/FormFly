@@ -36,6 +36,7 @@ THE SOFTWARE.
 }
 .uploadifyQueueItem .cancel {
 	float: right;
+	z-index: 99;
 }
 .uploadifyQueue .completed {
 	background-color: #E5E5E5;

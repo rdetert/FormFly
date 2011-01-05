@@ -25,14 +25,15 @@ class PostsController < ApplicationController
     # To make things easier in Uploadify, I hijacked the `folder` parameter
     slot = params[:folder].gsub("/", "")
     if slot.nil?
-      render :text => ""
+      render :json => {:status => 0, :message => "Error"}.to_json
       return false
     end
-    @image_uploads.images.where(:slot => slot).all.each{|image| image.destroy}
+    @current_images = @image_uploads.images.where(:slot => slot).all
     @upload = Image.new(:slot => slot, :data => params[:Filedata])
     if not @image_uploads.images << @upload
       render :json => {:status => 0, :message => "Error Uploading Image!"}.to_json
     else
+      @current_images.each{|image| image.destroy}
       render :json => {:status => 1, :img => my_thumb(@upload, 118, 118).url }.to_json
     end
   end
