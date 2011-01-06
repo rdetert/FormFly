@@ -1,5 +1,10 @@
 class PostsController < ApplicationController  
-  before_filter :get_image_uploads, :on => [:new]
+  before_filter :get_image_uploads
+  
+  @@return_early = Proc.new do 
+    render :json => {:status => 0, :message => "Error"}.to_json
+    return false
+  end
   
   def index
     @posts = Post.all
@@ -21,13 +26,12 @@ class PostsController < ApplicationController
   end
   
   def ajax_photo_upload
-    # slot must correspond to the file field form name of pic1, pic2, or pic3
     # To make things easier in Uploadify, I hijacked the `folder` parameter
-    slot = params[:folder].gsub("/", "")
-    if slot.nil?
-      render :json => {:status => 0, :message => "Error"}.to_json
-      return false
-    end
+    slot = params[:folder].match(/pic(\d)/) unless params[:folder].nil?
+    slot = slot[1] unless slot.nil?
+    @@return_early.call if slot.nil?
+    slot = "pic#{slot}"
+    
     @current_images = @image_uploads.images.where(:slot => slot).all
     @upload = Image.new(:slot => slot, :data => params[:Filedata])
     if not @image_uploads.images << @upload
