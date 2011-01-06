@@ -10,15 +10,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101231062326) do
+ActiveRecord::Schema.define(:version => 20101231060356) do
 
   create_table "assetable", :force => true do |t|
-  end
-
-  create_table "image_uploads", :force => true do |t|
-    t.integer  "assetable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "images", :force => true do |t|

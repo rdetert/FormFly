@@ -5,6 +5,6 @@ class ApplicationController < ActionController::Base
   helper_method :my_thumb
   
   def my_thumb(image, w, h)
-    image.data.process(:resize_and_crop, :width => w, :height=> h, :gravity => 'ne')
+    image.process(:resize_and_crop, :width => w, :height=> h, :gravity => 'ne')
   end
 end

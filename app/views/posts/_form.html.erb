@@ -1,13 +1,13 @@
 <div style="width:800px; height:300px;">
-	<%= form_for @image_uploads, :url => upload_photo_posts_path do |f| %>
+	<%= form_for :image_uploads, :url => upload_photo_posts_path do |f| %>
 		<% (1..3).each do |i| %>
 			<% slot = "pic#{i}" %>
 			<div style="position:absolute; left:<%=200*i-100%>px; top:150px; width:118px; height:118px; float:left; background-color:#f9f9f9; border:gray 1px solid;">
 				
-				<% @images = @image_uploads.images.where(:slot => slot).all %>
-				
-				<% imgurl = "onepixel.png" if @images.empty? %>
-				<% imgurl = my_thumb(@images.first, 118, 118).url unless @images.empty? %>
+				<% @image = ( session[:image_upload][:"#{slot}"].nil? ) ? [] : session[:image_upload][:"#{slot}"] %>
+				<% #debugger %>
+				<% imgurl = "onepixel.png" if @image.empty? %>
+				<% imgurl = my_thumb(@image, 118, 118).url unless @image.empty? %>
 				
 				<%= image_tag imgurl, :style => "width:118px; height:118px;", :id => slot %>
 
