@@ -64,6 +64,9 @@ class PostsController < ApplicationController
  private
  
    def get_image_uploads
+     debugger
+     session[:x] ||= 0
+     session[:x] += 1
      session[:image_upload] ||= {}
    end
   
