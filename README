@@ -11,13 +11,21 @@ $ rails s
 
 Go to localhost:3000
 
+TODO:
+
+1) Get it to work properly in production mode
+
+2) Use Tempfile
+
+3) Add video support
 
 ---
 Resources:
-	http://github.com/markevans/dragonfly
-	http://groups.google.com/group/dragonfly-users
-	http://www.glrzad.com/ruby-on-rails/using-uploadify-with-rails-3/
-	http://www.uploadify.com/documentation/methods/uploadifysettings/
+
+http://github.com/markevans/dragonfly
+http://groups.google.com/group/dragonfly-users
+http://www.glrzad.com/ruby-on-rails/using-uploadify-with-rails-3/
+http://www.uploadify.com/documentation/methods/uploadifysettings/
 
 
 ---
