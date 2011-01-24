@@ -11,13 +11,19 @@ $ rails s
 
 Go to localhost:3000
 
+-------------------------------
 TODO:
+	1. Add Flash Detection
+	
+	2. Video Uploads
 
-1) Get it to work properly in production mode
+-------------------------------
+CHANGELOG:
+January 23, 2011
+	1. Added form edit
+	2. Verified it works in production mode in Mongrel/WebBrick/Passenger
 
-2) Use Tempfile
 
-3) Add video support
 
 ---
 Resources:

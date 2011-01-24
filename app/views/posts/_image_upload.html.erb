@@ -1,6 +1,6 @@
 <div>
 	<%= file_field_tag "post[photos][#{picname}]", :class => "uploadify", :picname => picname %>
 	<div id="<%= "#{picname}_remover" %>">
-		<%= link_to("remove", destroy_photo_posts_url(@images.first.slot), :class => "remove_link", :picname => "#{picname}") if @images.present? %>
+		<%= link_to("remove", destroy_image_path(image_object, @images.first.slot), :class => "remove_link", :picname => "#{picname}") if @images.present? %>
 	</div>
 </div>

@@ -1,10 +1,11 @@
 <div style="width:800px; height:300px;">
-	<%= form_for @image_uploads, :url => upload_photo_posts_path do |f| %>
+	<%= form_for image_object, :url => upload_image_path(image_object) do |f| %>
+		
 		<% (1..3).each do |i| %>
 			<% slot = "pic#{i}" %>
 			<div style="position:absolute; left:<%=200*i-100%>px; top:150px; width:118px; height:118px; float:left; background-color:#f9f9f9; border:gray 1px solid;">
 				
-				<% @images = @image_uploads.images.where(:slot => slot).all %>
+				<% @images = image_object.images.where(:slot => slot).all %>
 				
 				<% imgurl = "onepixel.png" if @images.empty? %>
 				<% imgurl = my_thumb(@images.first, 118, 118).url unless @images.empty? %>
@@ -13,7 +14,7 @@
 
 			</div>
 			<div style="position:absolute; left:<%=200*i-100%>px; top:280px; float:left;">
-			<%= render :partial => "image_upload", :locals => { :picname => slot } %>
+			<%= render :partial => "image_upload", :locals => { :picname => slot, :image_object => image_object } %>
 			</div>
 		<% end %>
 	<% end %>
@@ -35,3 +36,113 @@
 	  	</div>
 	<% end %>
 </div>
+
+<script type="text/javascript">
+<% session_key = Rails.application.config.session_options[:key] %>
+
+$(document).ready(function(){
+	
+	// Create an empty object to store our custom script data
+	var uploadify_script_data = {};
+
+	// Fetch the CSRF meta tag data
+	var csrf_token = $('meta[name=csrf-token]').attr('content');
+	var csrf_param = $('meta[name=csrf-param]').attr('content');
+
+	// Now associate the data in the config, encoding the data safely
+	uploadify_script_data[csrf_param] = encodeURI(encodeURIComponent(csrf_token));
+
+	// Associate the session information
+	// GOTCHA : authenticity_token for Rails 3
+	uploadify_script_data["<%= session_key %>"] = "<%= cookies[session_key] %>";
+
+	$(".remove_link")
+		.live("click",
+				function()
+				{
+					link = this;
+					pic = $(this).attr("picname");
+					$.post(
+						$(this).attr("href"), 
+						function(response)
+						{
+							if (response.status == 1){
+								$("#"+pic).attr("src", "<%= image_path "onepixel.png" %>");
+								$(link).remove();
+							}else{
+								alert(response.message);
+							}
+						},
+						"json"
+					);
+					return false;
+				}
+			);
+
+	// Configure Uploadify
+	$('.uploadify')
+		.uploadify(
+			{
+				'uploader' : '/javascripts/uploadify/uploadify.swf',
+
+				'script' : '<%= upload_image_path(image_object) %>.json',
+
+				'scriptData' : uploadify_script_data,
+
+				'cancelImg' : '/images/cancel.png',
+
+				'multi' : false,
+				
+				'buttonText' : 'Add Photo', 
+
+				'auto' : true,
+
+				'fileExt': '*.jpg;*.jpeg;*.gif;*.png',
+				
+				'fileDesc': 'Image Files',
+				
+				'sizeLimit': <%= 500.kilobytes %>,
+
+				'removeCompleted' : true,
+
+				'onComplete' : function(event, ID, fileObj, response, data) 
+							{
+								var goodies = jQuery.parseJSON(response);
+								if (goodies.status == 1){
+									var _id = $(event.currentTarget).attr("picname");
+									$("#"+_id).attr("src", goodies.img);
+									
+									if ($("#"+_id+"_remover").children().length > 0) return true;
+									
+									var link = $("<a></a>");
+									$(link)
+										.attr("href", "<%= escape_javascript destroy_image_path(image_object) %>/"+_id)
+										.addClass("remove_link")
+										.attr("picname", _id)
+										.text("remove");
+									
+									$("#"+_id+"_remover").append(link);
+									
+								}else{
+									$("#"+_id+"_remover").html("");
+									alert(goodies.message);
+								}
+							},
+			
+				'onSelectOnce' : function(event, data) {
+					// GOTCHA : For some reason custom fields are tougher than they ought to be. See manual for onSelectOnce
+					//use the folder variable to correspond to our server slots
+					$(event.currentTarget).uploadifySettings("folder", "/"+$(event.currentTarget).attr("picname"));
+					// ------
+					// For some reason scriptData isn't working
+					// var filefield = event.currentTarget;
+					// var _scriptdata = $(filefield).uploadifySettings("scriptData");
+					// _scriptdata.picname = $(filefield).attr("picname");
+					// $(filefield).uploadifySettings("scriptData", _scriptdata, true);
+			    }
+			}
+	);
+
+});
+
+</script>

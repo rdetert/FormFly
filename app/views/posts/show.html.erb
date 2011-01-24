@@ -1,6 +1,6 @@
 <% @post.images.each do |image| %>
 	<div>
-		<%= link_to (image_tag image.data.thumb("100x").url), image.data.url %>
+		<%= link_to (image_tag image.data.thumb("200x>").url), image.data.url %>
 	</div>
 <% end %>
 
@@ -10,4 +10,5 @@
 	<%= @post.body %>
 </div>
 
-<div><%= link_to "Back to Posts", posts_path %></div>
+
+<div style="padding-top:50px"><%= link_to "Back to Posts", posts_path %></div>

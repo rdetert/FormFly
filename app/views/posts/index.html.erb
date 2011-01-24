@@ -3,7 +3,9 @@
 <ol>
 <% @posts.each do |post| %>
 	<li>
-		<%= image_tag post.images.first.data.thumb("100x").url %> <%= link_to post.title,  post_path(post) %>
+		<%= image_tag post.images.first.data.thumb("200x>").url %> 
+		<strong><%= link_to post.title,  post_path(post) %></strong>
+		<%= link_to "edit",  edit_post_path(post) %>
 	</li>
 <% end %>
 </ol>
