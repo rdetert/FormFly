@@ -2,8 +2,11 @@ FormFly is a demo for Rails 3 that uses DragonFly and Uploadify
 
 This version uses a technique where intermediary images are saved to a separate ImageUpload model while the server waits for the Post to be submitted.
 
+Potential Issues:
+1. Use Ruby 1.8.7. Not sure why there is a quirky issue with 1.9.2.
+2. You may run into issues if using Nginx/Passenger. I was unable to get around the IO Error problem. Apache2/Passenger seems to work without issue though.
 
-To Install:
+To Install
 
 $ bundle install
 $ rake db:migrate

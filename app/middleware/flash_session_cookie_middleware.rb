@@ -1,7 +1,7 @@
 require 'rack/utils'
  
 class FlashSessionCookieMiddleware
-  def initialize(app, session_key = '_session_id')
+  def initialize(app, session_key = '_formfly_session')
     @app = app
     @session_key = session_key
   end

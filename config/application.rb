@@ -47,5 +47,6 @@ module Formfly
       :metastore   => "file:#{Rails.root}/tmp/dragonfly/cache/meta",
       :entitystore => "file:#{Rails.root}/tmp/dragonfly/cache/body"
     }
+    # config.middleware.insert_before 'ActionDispatch::Session::CookieStore', 'FlashSessionCookieMiddleware', config.session_options[:key]
   end
 end

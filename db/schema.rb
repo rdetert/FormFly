@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(:version => 20101231062326) do
   end
 
   create_table "image_uploads", :force => true do |t|
+    t.integer  "post_id"
     t.integer  "assetable_id"
     t.datetime "created_at"
     t.datetime "updated_at"

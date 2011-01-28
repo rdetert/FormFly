@@ -1,5 +1,5 @@
 <div style="width:800px; height:300px;">
-	<%= form_for image_object, :url => upload_image_path(image_object) do |f| %>
+	<%= form_for image_object, :url => upload_photo_posts_path(image_object) do |f| %>
 		
 		<% (1..3).each do |i| %>
 			<% slot = "pic#{i}" %>
@@ -116,7 +116,7 @@ $(document).ready(function(){
 									
 									var link = $("<a></a>");
 									$(link)
-										.attr("href", "<%= escape_javascript destroy_image_path(image_object) %>/"+_id)
+										.attr("href", "<%= escape_javascript destroy_photo_posts_path %>/"+_id)
 										.addClass("remove_link")
 										.attr("picname", _id)
 										.text("remove");
