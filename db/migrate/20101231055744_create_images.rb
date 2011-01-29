@@ -4,6 +4,7 @@ class CreateImages < ActiveRecord::Migration
       t.belongs_to  :assetable
       t.string      :slot
       t.string      :data_uid
+      t.boolean     :delete_from_disk, :default => true
       t.timestamps
     end
   end

@@ -1,11 +1,11 @@
 <div style="width:800px; height:300px;">
-	<%= form_for image_object, :url => upload_photo_posts_path(image_object) do |f| %>
+	<%= form_for @image_uploads, :url => upload_photo_posts_path(@image_uploads) do |f| %>
 		
 		<% (1..3).each do |i| %>
 			<% slot = "pic#{i}" %>
 			<div style="position:absolute; left:<%=200*i-100%>px; top:150px; width:118px; height:118px; float:left; background-color:#f9f9f9; border:gray 1px solid;">
 				
-				<% @images = image_object.images.where(:slot => slot).all %>
+				<% @images = @image_uploads.images.where(:slot => slot).all %>
 				
 				<% imgurl = "onepixel.png" if @images.empty? %>
 				<% imgurl = my_thumb(@images.first, 118, 118).url unless @images.empty? %>
@@ -14,7 +14,7 @@
 
 			</div>
 			<div style="position:absolute; left:<%=200*i-100%>px; top:280px; float:left;">
-			<%= render :partial => "image_upload", :locals => { :picname => slot, :image_object => image_object } %>
+			<%= render :partial => "image_upload", :locals => { :picname => slot } %>
 			</div>
 		<% end %>
 	<% end %>
@@ -43,18 +43,18 @@
 $(document).ready(function(){
 	
 	// Create an empty object to store our custom script data
-	var uploadify_script_data = {};
+	//var uploadify_script_data = {};
 
 	// Fetch the CSRF meta tag data
-	var csrf_token = $('meta[name=csrf-token]').attr('content');
-	var csrf_param = $('meta[name=csrf-param]').attr('content');
+	//var csrf_token = $('meta[name=csrf-token]').attr('content');
+	//var csrf_param = $('meta[name=csrf-param]').attr('content');
 
 	// Now associate the data in the config, encoding the data safely
-	uploadify_script_data[csrf_param] = encodeURI(encodeURIComponent(csrf_token));
+	//uploadify_script_data[csrf_param] = encodeURI(encodeURIComponent(csrf_token));
 
 	// Associate the session information
 	// GOTCHA : authenticity_token for Rails 3
-	uploadify_script_data["<%= session_key %>"] = "<%= cookies[session_key] %>";
+	//uploadify_script_data["<%= session_key %>"] = "<%= cookies[session_key] %>";
 
 	$(".remove_link")
 		.live("click",
@@ -83,29 +83,29 @@ $(document).ready(function(){
 	$('.uploadify')
 		.uploadify(
 			{
-				'uploader' : '/javascripts/uploadify/uploadify.swf',
+				uploader : '/javascripts/uploadify/uploadify.swf',
 
-				'script' : '<%= upload_image_path(image_object) %>.json',
+				script : '<%= upload_image_path(@image_uploads) %>.json',
 
-				'scriptData' : uploadify_script_data,
+				//scriptData : uploadify_script_data,
 
-				'cancelImg' : '/images/cancel.png',
+				cancelImg : '/images/cancel.png',
 
-				'multi' : false,
+				multi : false,
 				
-				'buttonText' : 'Add Photo', 
+				buttonText : 'Add Photo', 
 
-				'auto' : true,
+				auto : true,
 
-				'fileExt': '*.jpg;*.jpeg;*.gif;*.png',
+				fileExt : '*.jpg;*.jpeg;*.gif;*.png',
 				
-				'fileDesc': 'Image Files',
+				fileDesc : 'Image Files',
 				
-				'sizeLimit': <%= 500.kilobytes %>,
+				sizeLimit : <%= 500.kilobytes %>,
 
-				'removeCompleted' : true,
+				removeCompleted : true,
 
-				'onComplete' : function(event, ID, fileObj, response, data) 
+				onComplete : function(event, ID, fileObj, response, data) 
 							{
 								var goodies = jQuery.parseJSON(response);
 								if (goodies.status == 1){
@@ -116,7 +116,7 @@ $(document).ready(function(){
 									
 									var link = $("<a></a>");
 									$(link)
-										.attr("href", "<%= escape_javascript destroy_photo_posts_path %>/"+_id)
+										.attr("href", "<%= escape_javascript destroy_photo_posts_path %>/"+_id+"/<%= @_action %>")
 										.addClass("remove_link")
 										.attr("picname", _id)
 										.text("remove");
@@ -129,7 +129,7 @@ $(document).ready(function(){
 								}
 							},
 			
-				'onSelectOnce' : function(event, data) {
+				onSelectOnce : function(event, data) {
 					// GOTCHA : For some reason custom fields are tougher than they ought to be. See manual for onSelectOnce
 					//use the folder variable to correspond to our server slots
 					$(event.currentTarget).uploadifySettings("folder", "/"+$(event.currentTarget).attr("picname"));
@@ -139,7 +139,15 @@ $(document).ready(function(){
 					// var _scriptdata = $(filefield).uploadifySettings("scriptData");
 					// _scriptdata.picname = $(filefield).attr("picname");
 					// $(filefield).uploadifySettings("scriptData", _scriptdata, true);
-			    }
+				},
+
+				scriptData : {
+					'_http_accept': 'application/javascript',
+					'_method': 'put', 
+					'_action': '<%= @_action %>',
+					'<%= session_key %>' : encodeURIComponent('<%= u cookies[session_key] %>'),
+					'authenticity_token': encodeURIComponent('<%= u form_authenticity_token %>')
+				}
 			}
 	);
 

@@ -1,7 +1,8 @@
 class CreateImageUploads < ActiveRecord::Migration
   def self.up
     create_table :image_uploads do |t|
-      t.belongs_to  :post
+      t.belongs_to  :session_workaround
+      # t.belongs_to  :post
       t.belongs_to  :assetable
       t.timestamps
     end

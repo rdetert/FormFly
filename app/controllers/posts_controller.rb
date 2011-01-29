@@ -1,5 +1,6 @@
-class PostsController < ApplicationController  
-  before_filter :get_image_uploads, :only => [:new, :create, :ajax_photo_upload, :ajax_photo_destroy]
+class PostsController < ApplicationController 
+  before_filter :translate_action, :except => [:index, :show]
+  before_filter :get_image_uploads, :except => [:index, :show]
   
   @@return_early = Proc.new do 
     render :json => {:status => 0, :message => "Error"}.to_json
@@ -14,38 +15,8 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
   end
   
-  # def member_ajax_photo_destroy
-  #   @post = Post.find(params[:id])
-  #   @post.images.where(:slot => params[:slot]).all.each do |image| 
-  #     @status = image.destroy
-  #   end
-  #   if @status.nil?
-  #     render :json => {:status => 0, :message => "Could Not Destroy Image!"}.to_json
-  #   else
-  #     render :json => {:status => 1, :message => "Successfully Destroyed Image!"}.to_json
-  #   end
-  # end
-  # 
-  # def member_ajax_photo_upload
-  #   @post = Post.find(params[:id])
-  #   # To make things easier in Uploadify, I hijacked the `folder` parameter
-  #   slot = params[:folder].match(/pic(\d)/) unless params[:folder].nil?
-  #   slot = slot[1] unless slot.nil?
-  #   @@return_early.call if slot.nil?
-  #   slot = "pic#{slot}"
-  #   
-  #   @current_images = @post.images.where(:slot => slot).all
-  #   @upload = Image.new(:slot => slot, :data => params[:Filedata])
-  #   if not @post.images << @upload
-  #     render :json => {:status => 0, :message => "Error Uploading Image!"}.to_json
-  #   else
-  #     @current_images.each{|image| image.destroy}
-  #     render :json => {:status => 1, :img => my_thumb(@upload, 118, 118).url }.to_json
-  #   end
-  # end
-  
   def ajax_photo_destroy
-    @image_uploads.images.where(:slot => params[:slot]).all.each do |image| 
+    @image_uploads.images.where(:slot => params[:slot]).all.each do |image|
       @status = image.destroy
     end
     if @status.nil?
@@ -78,19 +49,15 @@ class PostsController < ApplicationController
   end
   
   def create
-    # debugger
     @post = Post.new(params[:post])
     @post.assetable = @image_uploads.assetable
-    # debugger
     Post.transaction do
       if @post.save
-        # debugger
         @image_uploads.assetable = nil
-        @image_uploads.destroy
-        session[:image_upload_id] = nil
+        @image_uploads.save                       # Is this really necessary?
+        @session_workaround.destroy
         redirect_to(posts_path, :notice => 'Post was successfully created.')
       else
-        # debugger
         render :new
       end
     end
@@ -98,37 +65,48 @@ class PostsController < ApplicationController
   
   def edit
     @post = Post.find(params[:id])
-    @post.images.each{|image| @post.image_upload.images << image.clone }
-    debugger
-    x = 0
+    @image_uploads.images.each{ |image| image.destroy }
+    @post.images.each do |image|
+      cloned_image = image.clone
+      cloned_image.delete_from_disk = false
+      @image_uploads.images << cloned_image
+    end
   end
   
   def update
     @post = Post.find(params[:id])
-    respond_to do |format|
-      if @post.update_attributes(params[:post])
-        format.html { redirect_to(@post, :notice => 'Post was successfully updated.') }
-      else
-        format.html { render :action => "edit" }
+    Post.transaction do
+      old_assetable = @post.assetable
+      @post.assetable = @image_uploads.assetable
+      respond_to do |format|
+        if @post.update_attributes(params[:post])
+          @post.images.each{|image| image.delete_from_disk = true }
+          old_assetable.destroy
+          @image_uploads.assetable = nil
+          @image_uploads.save                     # Is this really necessary?
+          @session_workaround.destroy
+          format.html { redirect_to(@post, :notice => 'Post was successfully updated.') }
+        else
+          format.html { render :action => "edit" }
+        end
       end
     end
   end
   
 private
 
+  def translate_action
+    @_action = params[:_action] || SessionWorkaround.translate_action(params[:action])
+  end
+
   def get_image_uploads
-    if session[:image_upload_id].nil?
-      @image_uploads = ImageUpload.create!
-      debugger
-      a=0
-    else
-      @image_uploads = ImageUpload.find_or_create_by_id(session[:image_upload_id])
-      debugger
-      b=0
+    # => Have to implement this instead of doing something like session[:image_upload_id]
+    # => because 10% of the time the session variables would vanish????? :-/
+    @session_workaround = SessionWorkaround.find_or_create_by_session_id_and_action(session[:session_id], @_action)
+    if @session_workaround.image_uploads.empty?
+      @session_workaround.image_uploads << ImageUpload.create!
     end
-    session[:image_upload_id] = @image_uploads.id
-    debugger
-    x=0
+    @image_uploads = @session_workaround.image_uploads.first
   end
   
 end

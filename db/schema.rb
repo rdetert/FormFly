@@ -10,13 +10,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101231062326) do
+ActiveRecord::Schema.define(:version => 20110128073108) do
 
   create_table "assetable", :force => true do |t|
   end
 
   create_table "image_uploads", :force => true do |t|
-    t.integer  "post_id"
+    t.integer  "session_workaround_id"
     t.integer  "assetable_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20101231062326) do
     t.integer  "assetable_id"
     t.string   "slot"
     t.string   "data_uid"
+    t.boolean  "delete_from_disk", :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -37,5 +38,14 @@ ActiveRecord::Schema.define(:version => 20101231062326) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "session_workarounds", :force => true do |t|
+    t.string   "session_id"
+    t.string   "action"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "session_workarounds", ["session_id", "action"], :name => "index_session_workarounds_on_session_id_and_action"
 
 end

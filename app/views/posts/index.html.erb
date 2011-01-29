@@ -1,6 +1,6 @@
-<h1>FormFly Posts</h1>
+<%= render 'share/header' %>
 
-<ol>
+<ol style="position:absolute; left:100px; top:150px;">
 <% @posts.each do |post| %>
 	<li>
 		<%= image_tag post.images.first.data.thumb("200x>").url %> 
