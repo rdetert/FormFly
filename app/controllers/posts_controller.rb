@@ -104,7 +104,8 @@ class PostsController < ApplicationController
 private
 
   def translate_action
-    @_action = params[:_action] || SessionWorkaround.translate_action(params[:action])
+    action = params[:_action] || params[:action]
+    @_action = SessionWorkaround.translate_action(action)
   end
 
   def get_image_uploads

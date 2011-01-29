@@ -22,11 +22,17 @@ TODO:
 CHANGELOG:
 January 28, 2011
 	1. Completely re-wrote the 'edit' portion
-	2. Session variables were disappearing randomly (no idea why). As a workaround, I made my own mini session handling using ActiveRecord. 
-		Session variables would disappear and reappear between requests about 10% of the time, so I added a SessionWorkaround model that holds the action state, as well as the session_id. The session_id doesn't appear to change at all. I tried using an ActiveRecord Session Store, but this caused issues with the Uploadify Middleware workaround.
+	
+	2. Session variables were disappearing randomly (no idea why). 
+		As a workaround, I made my own mini session handling using ActiveRecord. 
+		Session variables would disappear and reappear between requests about 10% of the time, 
+		so I added a SessionWorkaround model that holds the action state, as well as the session_id. 
+		The session_id doesn't appear to change at all. 
+		I tried using an ActiveRecord Session Store, but this caused issues with the Uploadify Middleware workaround.
 
 January 23, 2011
 	1. Added form edit
+	
 	2. Verified it works in production mode in Mongrel/WebBrick/Passenger
 
 

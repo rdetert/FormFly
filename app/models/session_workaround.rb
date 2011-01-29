@@ -3,6 +3,7 @@ class SessionWorkaround < ActiveRecord::Base
   
   def self.translate_action(action)
     return "new"   if action == "new" or action == "create"
-    return "edit"  if action == "edit" or action == "update" 
+    return "edit"  if action == "edit" or action == "update"
+    nil
   end
 end
