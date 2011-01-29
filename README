@@ -2,10 +2,6 @@ FormFly is a demo for Rails 3 that uses DragonFly and Uploadify
 
 This version uses a technique where intermediary images are saved to a separate ImageUpload model while the server waits for the Post to be submitted.
 
-Potential Issues:
-1. Use Ruby 1.8.7. Not sure why there is a quirky issue with 1.9.2.
-2. You may run into issues if using Nginx/Passenger. I was unable to get around the IO Error problem. Apache2/Passenger seems to work without issue though.
-
 To Install
 
 $ bundle install
@@ -19,9 +15,16 @@ TODO:
 	1. Add Flash Detection
 	
 	2. Video Uploads
+	
+	3. Implement Resque to clean up stale SessionWorkaround objects and abandoned files.
 
 -------------------------------
 CHANGELOG:
+January 28, 2011
+	1. Completely re-wrote the 'edit' portion
+	2. Session variables were disappearing randomly (no idea why). As a workaround, I made my own mini session handling using ActiveRecord. 
+		Session variables would disappear and reappear between requests about 10% of the time, so I added a SessionWorkaround model that holds the action state, as well as the session_id. The session_id doesn't appear to change at all. I tried using an ActiveRecord Session Store, but this caused issues with the Uploadify Middleware workaround.
+
 January 23, 2011
 	1. Added form edit
 	2. Verified it works in production mode in Mongrel/WebBrick/Passenger
