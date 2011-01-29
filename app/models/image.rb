@@ -4,15 +4,13 @@ class Image < Asset
   validates_size_of :data, :maximum =>  500.kilobytes
   validates_property :mime_type, :of => :data, :in => %w(image/jpeg image/jpg image/png image/gif)
   
-  before_destroy  :testing
-  def testing
-    self.data = nil unless self.delete_from_disk
+  def destroy
+    hack = self.data
+    if not self.delete_from_disk
+      self.data = nil
+      hack.instance_variable_set("@previous_uid", nil)
+    end
+    super
   end
-  
-  # Not sure why, but this doesn't work
-  # def destroy
-  #   self.data = nil unless self.delete_from_disk
-  #   super
-  # end
   
 end

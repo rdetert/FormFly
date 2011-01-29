@@ -81,6 +81,14 @@ class PostsController < ApplicationController
       respond_to do |format|
         if @post.update_attributes(params[:post])
           @post.images.each{|image| image.delete_from_disk = true }
+          # find where old and new don't overlap, we will keep the overlap and delete the rest
+          # for small numbers, might as well just brute force in memory
+          old_assetable.images.each do |old_image|
+            old_image.delete_from_disk = true
+            @post.images.each do |new_image|
+              old_image.delete_from_disk = false if old_image.data_uid == new_image.data_uid
+            end
+          end
           old_assetable.destroy
           @image_uploads.assetable = nil
           @image_uploads.save                     # Is this really necessary?
