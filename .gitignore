@@ -5,3 +5,4 @@ tmp/**/*
 public/system/*
 .DS_Store
 */.DS_Store
+Gemfile.lock
