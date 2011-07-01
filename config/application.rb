@@ -40,13 +40,13 @@ module Formfly
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-    
-    config.middleware.insert_after 'Rack::Lock', 'Dragonfly::Middleware', :images, '/media'
-    config.middleware.insert_before 'Dragonfly::Middleware', 'Rack::Cache', {
-      :verbose     => true,
-      :metastore   => "file:#{Rails.root}/tmp/dragonfly/cache/meta",
-      :entitystore => "file:#{Rails.root}/tmp/dragonfly/cache/body"
-    }
+        
+    config.middleware.insert_after 'Rack::Lock', 'Dragonfly::Middleware', :images
+      config.middleware.insert_before 'Dragonfly::Middleware', 'Rack::Cache', {
+        :verbose     => true,
+        :metastore   => "file:#{Rails.root}/tmp/dragonfly/cache/meta",
+        :entitystore => "file:#{Rails.root}/tmp/dragonfly/cache/body"
+      }
     # config.middleware.insert_before 'ActionDispatch::Session::CookieStore', 'FlashSessionCookieMiddleware', config.session_options[:key]
   end
 end
